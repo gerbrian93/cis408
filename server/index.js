@@ -6,7 +6,7 @@ const { fetchLatestData, fetchDataRange, fetchAllData } = require('./dataControl
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({allowedHeaders:['Content-Type','Authorization']}));
 app.use(express.static(path.join(__dirname, '..', 'build')));
 
 app.get('/api/get-data', async (req, res) => {
@@ -16,7 +16,7 @@ app.get('/api/get-data', async (req, res) => {
             res.status(404).json({ error: 'No data found' });
         } else {
             const responseObject = { data };
-            console.log('Response object:', responseObject);
+            //console.log('Response object:', responseObject);
             res.json(responseObject);
         }
     } catch (error) {
@@ -26,6 +26,8 @@ app.get('/api/get-data', async (req, res) => {
 });
 
 app.get('/api/get-data-range', async (req, res) => {
+    console.log('Request headers:', req.headers);
+    console.log('Request query:', req.query);
     const startTime = req.query.startTime;
     const endTime = req.query.endTime;
 
@@ -34,7 +36,8 @@ app.get('/api/get-data-range', async (req, res) => {
         if (!data) {
             res.status(404).json({ error: 'No data found for the specified time range' });
         } else {
-            res.json(data);
+            const responseObj = { data };
+            res.json(responseObj);
         }
     } catch (error) {
         console.error('Server error:', error);

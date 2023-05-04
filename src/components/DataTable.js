@@ -69,7 +69,7 @@
 // };
 
 // export default DataTable;
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useCallback} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const DataTable = () => {
@@ -82,20 +82,22 @@ const DataTable = () => {
     setEndDate(submittedEndDate);
   };
 
-  const fetchSensorData = async () => {
+  const fetchSensorData = useCallback(async () => {
     try {
       if (!startDate || !endDate) return;
       const startTime = startDate;
       const endTime = endDate;
       const response = await fetch(`/api/get-data-range?startTime=${encodeURIComponent(startTime)}&endTime=${encodeURIComponent(endTime)}`);
+      console.log(response);
       const results = await response.json();
       results.data = results.data.reverse();
       setSensorData(results);
-      console.log(endDate.toString(),startDate.toString())
+      // console.log(results.length)
+      // console.log(endDate.toString(),startDate.toString())
     } catch (error) {
       console.error('Error', error);
     }
-  };
+  }, [startDate, endDate]);
 
   function fixTime(d) {
     var leng = d.length;
@@ -113,7 +115,7 @@ const DataTable = () => {
 
   useEffect(() => {
     fetchSensorData();
-  }, [startDate, endDate]);
+  }, [fetchSensorData]);
 
   return (
       <>
@@ -143,7 +145,7 @@ const DataTable = () => {
           </div>
           <button type="submit">Submit</button>
         </form>
-        <table className="tabledata" class="table table-striped table-bordered">
+        <table className="table table-striped table-bordered">
           <thead>
           <tr>
             <td className="headRow"><b>Date</b></td>

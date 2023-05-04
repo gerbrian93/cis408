@@ -82,7 +82,7 @@ function App() {
                                     <Container>
 
                                         <center><br></br><h3>Data Table</h3>
-                                        <DataTable></DataTable></center>
+                                            <DataTable></DataTable></center>
                                         <Typography variant="h5" align="center" gutterBottom>
                                             Harvest progress
                                         </Typography>
