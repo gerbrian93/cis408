@@ -43,7 +43,6 @@ const DataTable = () => {
   }
 
  
-
   useEffect(() => {
     if (searchData) {
       fetchSensorData();
@@ -79,6 +78,7 @@ const DataTable = () => {
                 onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
+          <p> items found</p>
           <button className="formBtn" type="submit">Search</button>
           </div>
         </form>
