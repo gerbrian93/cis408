@@ -52,17 +52,7 @@ async function fetchLatestData() {
     }
 }
 
-// function formatDate(date) {
-//     const d = new Date(date);
-//     const year = d.getFullYear();
-//     const month = (d.getMonth() + 1).toString().padStart(2, '0');
-//     const day = d.getDate().toString().padStart(2, '0');
-//     return `${year}-${month}-${day}`;
-// }
-// function parseDateString(dateString) {
-//     const [month, day, year] = dateString.split('/').map(Number);
-//     return new Date(year, month - 1, day);
-//   }
+
 
 async function fetchDataRange(startTime, endTime) {
     const mongoClient = await connectDB();
@@ -71,11 +61,13 @@ async function fetchDataRange(startTime, endTime) {
     const end = new Date(endTime);
     const sstring = start.toISOString().slice(0,10);
     const estring = end.toISOString().slice(0,10);
+    console.log('Start:', sstring);
+    console.log('End:', estring);
     try {
         const data = await mongoClient
             .db()
             .collection('plcdata')
-            .find({ DateAndTime: { $gte: sstring, $lte: estring } })
+            .find({ DateAndTime: { $gte: sstring, $lte: estring+" 23:59:59.000" } })
             .toArray();
         return data;
     } catch (error) {
