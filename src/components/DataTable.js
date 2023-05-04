@@ -76,10 +76,12 @@ const DataTable = () => {
   const [sensorData, setSensorData] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [searchData, setSearchData] = useState(false);
 
   const handleDateSubmit = (submittedStartDate, submittedEndDate) => {
     setStartDate(submittedStartDate);
     setEndDate(submittedEndDate);
+    setSearchData(true);
   };
 
   const fetchSensorData = useCallback(async () => {
@@ -87,13 +89,11 @@ const DataTable = () => {
       if (!startDate || !endDate) return;
       const startTime = startDate;
       const endTime = endDate;
-      const response = await fetch(`/api/get-data-range?startTime=${encodeURIComponent(startTime)}&endTime=${encodeURIComponent(endTime)}`);
-      console.log(response);
+      const response = await fetch(`http://localhost:3001/api/get-data-range?startTime=${encodeURIComponent(startTime)}&endTime=${encodeURIComponent(endTime)}`);
+      console.log(response.data);
       const results = await response.json();
       results.data = results.data.reverse();
       setSensorData(results);
-      // console.log(results.length)
-      // console.log(endDate.toString(),startDate.toString())
     } catch (error) {
       console.error('Error', error);
     }
@@ -114,8 +114,11 @@ const DataTable = () => {
   }
 
   useEffect(() => {
-    fetchSensorData();
-  }, [fetchSensorData]);
+    if (searchData) {
+      fetchSensorData();
+      setSearchData(false);
+    }
+  }, [fetchSensorData, searchData]);
 
   return (
       <>
@@ -123,7 +126,8 @@ const DataTable = () => {
           e.preventDefault();
           handleDateSubmit(e.target.startDate.value, e.target.endDate.value);
         }}>
-          <div>
+          <div className="d-flex">
+          <div className="form-field">
             <label htmlFor="startDate">Start Date:</label>
             <input
                 type="date"
@@ -133,7 +137,8 @@ const DataTable = () => {
                 onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
-          <div>
+          
+          <div className="form-field">
             <label htmlFor="endDate">End Date:</label>
             <input
                 type="date"
@@ -143,8 +148,10 @@ const DataTable = () => {
                 onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit">&nbsp;Search&nbsp;</button>
+          </div>
         </form>
+        <div className="tbl-container">
         <table className="table table-striped table-bordered">
           <thead>
           <tr>
@@ -169,6 +176,7 @@ const DataTable = () => {
           ))}
           </tbody>
         </table>
+        </div>
       </>
   );
 };

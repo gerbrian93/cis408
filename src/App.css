@@ -23,6 +23,15 @@
   pointer-events: none;
 }
 
+.tbl-container {
+  height: 400px;
+  overflow-y: auto;
+}
+
+.form-field {
+  margin-right: 20px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
